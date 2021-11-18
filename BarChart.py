@@ -6,20 +6,19 @@ import pygame
 
 class BarChart():
      """ An bar chart element showing a value """
-     padding = 10
      
      def __init__(self, values):
          pygame.sprite.AbstractGroup.__init__(self)
          self.width, self.height = pygame.display.get_window_size()
-         
+         self.padding = round(10 * (10/len(values)))
          self.values = values
          
-         self.bar_width = (self.width-(BarChart.padding * (len(values) + 1 )))/len(values)
+         self.bar_width = round((self.width-(self.padding * (len(values) + 1 )))/len(values))
          self.selected = [None, None]
          
          self.bars = []
          for x, value in enumerate(self.values):
-            offset = BarChart.padding  + (BarChart.padding  * x)
+            offset = self.padding  + (self.padding  * x)
             topleft = (self.bar_width*x + offset, self.height - (value * 10))
             bar = Bar(value, x, (255, 255, 255), topleft, self.bar_width, value * 10)
             self.bars.append(bar)
@@ -28,7 +27,7 @@ class BarChart():
          bars = self.bars  
          pixel_shift = y-x
          bars[x].move(pixel_shift * (self.bar_width + self.padding), 0)
-         bars[y].move(-(pixel_shift * (self.bar_width + self.padding)), 0)
+         bars[y].move((-pixel_shift * (self.bar_width + self.padding)), 0)
          bars[x], bars[y] = bars[y], bars[x]
                   
          return None
@@ -39,7 +38,7 @@ class BarChart():
     #  def draw(self, surface):
     #     """ Draws element onto a surface """
     #     for x, value in enumerate(self.values):
-    #         offset = BarChart.padding  + (BarChart.padding  * x)
+    #         offset = self.padding  + (self.padding  * x)
     #         pygame.draw.rect(surface, (255, 255, 255), (self.bar_width*x + offset, self.height - (value * 10), self.bar_width, value * 10), 0)
             
             
@@ -52,6 +51,8 @@ class Bar(pygame.sprite.Sprite):
     def __init__(self, value, index, color, topleft, width, height, action=None):
         self.value = value
         self.index = index
+        self.height = height
+        self.width = self.width
         
         default = pygame.Surface((width, height))
         default.fill(color)
@@ -95,3 +96,19 @@ class Bar(pygame.sprite.Sprite):
     def move(self, x, y):
         for rect in self.rects:
             pygame.Rect.move_ip(rect, x, y)
+            
+    # def set_value(self, value):
+    #     self.value = value
+    #     self.height = 10 * value
+        
+    #     default = pygame.Surface((width, self.height))
+    #     default.fill(color)
+        
+    #     hover = pygame.Surface((width, height))
+    #     hover.fill((0, 0, 0))
+        
+    #     self.images = [default, hover]
+    #     self.rects = [
+    #         default.get_rect(topleft=topleft),
+    #         hover.get_rect(topleft=topleft)
+    #     ]
