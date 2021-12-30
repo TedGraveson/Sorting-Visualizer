@@ -5,7 +5,7 @@ from pygame.sprite import Sprite
 from pygame.rect import Rect
 from enum import Enum
 from pygame.sprite import RenderUpdates
-from bar_chart import BarChart, Bar
+from bar_chart import BarChart, Bar, random_bar_chart
 from threading import Thread
 import time
 from numpy import random
@@ -14,7 +14,7 @@ import constants
 from constants import FAST, GameState, BLUE, WHITE, SORTING
 from buttons import sorting_controls, title_buttons
 
-from sorting_algorithms import bubble_sort_vis, insertion_sort_vis, merge_sort_vis 
+from sorting_algorithms import bubble_sort_vis, insertion_sort_vis, merge_sort_vis, ms
 
 def check_click():
     """Checks if the user has performed a mouse click.
@@ -39,13 +39,13 @@ def game_loop(screen, elements, sorting_algo=[], graphs=[], *args):
     """
     
     threads = [ 0 ] * len(graphs)
+    
     while True:
         if pygame.event.get(pygame.QUIT):
             pygame.quit()
             exit()   
             
         mouse_click = check_click()
-        
         
         for element in elements:
             ui_action = element.update(pygame.mouse.get_pos(), mouse_click)
@@ -70,7 +70,10 @@ def game_loop(screen, elements, sorting_algo=[], graphs=[], *args):
                     graphs = new_graphs
                     
                 elif ui_action == GameState.SPEED:
-                    print("Speed change")
+                    for button in elements:
+                        if button.text_rgb is not constants.WHITE:
+                            button.change_color(constants.WHITE)
+                        element.change_color(constants.RED)
                 
                 elif ui_action == GameState.TITLE:
                     if constants.SORTING:
@@ -93,33 +96,33 @@ def game_loop(screen, elements, sorting_algo=[], graphs=[], *args):
         
 def bubble_sort(screen):
     buttons = RenderUpdates(sorting_controls())
-    graphs = [BarChart(random.randint(low=1, high=99, size=constants.SIZE), size=(800, 500), origin=(0, 600))]
+    graphs = [random_bar_chart()]
     sorting_algos = [bubble_sort_vis]
     return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
     
     
 def insertion_sort(screen):
     buttons = RenderUpdates(sorting_controls())
-    graphs = [BarChart(random.randint(low=1, high=99, size=constants.SIZE), size=(800, 500), origin=(0, 600))]
+    graphs = [random_bar_chart()]
     sorting_algos = [insertion_sort_vis]
     return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
 
 def merge_sort(screen):
     buttons = RenderUpdates(sorting_controls())
-    graphs = [BarChart(random.randint(low=1, high=99, size=constants.SIZE), size=(800, 500), origin=(0, 600))]
-    sorting_algos = [merge_sort_vis]
+    graphs = [random_bar_chart()]
+    sorting_algos = [ms]
     return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
 
 def compare_sorts(screen):
     buttons = RenderUpdates(sorting_controls())
     
-    values = BarChart(random.randint(low=1, high=99, size=(constants.SIZE)), size=(800, 100), origin=(0, 600))
-    values2 = BarChart(random.randint(low=1, high=99, size=(constants.SIZE)), size=(800, 100), origin=(0, 400))
-    values3 = BarChart(random.randint(low=1, high=99, size=(constants.SIZE)), size=(800, 100), origin=(0, 200))
+    b1 = random_bar_chart(size=(800, 100), origin=(0, 600))
+    b2 = random_bar_chart(size=(800, 100), origin=(0, 400))
+    b3 = random_bar_chart(size=(800, 100), origin=(0, 200))
     
-    graphs = [values, values2, values3]
+    graphs = [b1, b2, b3]
         
-    sorting_algos = [bubble_sort_vis, insertion_sort_vis, merge_sort_vis]
+    sorting_algos = [bubble_sort_vis, insertion_sort_vis, ms]
     return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
     
 
@@ -127,7 +130,7 @@ def title_screen(screen):
     buttons = RenderUpdates(title_buttons())
     return game_loop(screen, buttons)    
 
-def main():
+if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
     game_state = GameState.TITLE
@@ -155,9 +158,6 @@ def main():
             game_state = compare_sorts(screen)
             
         # Quit Application
-        elif game_state == GameState.QUIT:
+        elif game_state == pygame.QUIT or pygame.event.get(pygame.QUIT):
             pygame.quit()
-            return
-        
-if __name__ == "__main__":
-    main()
+            exit()

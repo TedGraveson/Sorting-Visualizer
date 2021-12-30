@@ -2,6 +2,9 @@ from pygame import color, sprite
 from pygame.sprite import Sprite
 import pygame
 from threading import Lock
+from numpy import random
+import constants
+from constants import SIZE_SMALL, SIZE_MEDIUM, SIZE_LARGE
 
 
 class Bar(pygame.sprite.Sprite):
@@ -11,6 +14,7 @@ class Bar(pygame.sprite.Sprite):
         Sprite ([type]): [description]
     """
     def __init__(self, value, index, color, topleft, width, height, action=None):
+        super().__init__()
         self.value = value
         self.index = index
         self.height = height
@@ -31,7 +35,6 @@ class Bar(pygame.sprite.Sprite):
         ]
         self.mouse_over = False
         self.action = action
-        super().__init__()
         
     @property
     def image(self):
@@ -56,7 +59,6 @@ class Bar(pygame.sprite.Sprite):
         """ Draws element onto a surface """
         surface.blit(self.image, self.rect)
         
-    
     def move(self, x, y):
         for rect in self.rects:
             pygame.Rect.move_ip(rect, x, y)
@@ -65,6 +67,7 @@ class Bar(pygame.sprite.Sprite):
         self.color = new_color
         for image in self.images:
             image.fill(new_color)
+
 
 class BarChart(pygame.sprite.AbstractGroup):
      """ An bar chart element showing a value """
@@ -108,3 +111,6 @@ class BarChart(pygame.sprite.AbstractGroup):
      def draw(self, surface):
         for bar in self.bars:
             bar.draw(surface)
+
+def random_bar_chart(low=1, high=99, size=(800, 500), origin=(0, 600)):
+    return BarChart(random.randint(low=1, high=99, size=(constants.SIZE)), size=size, origin=origin)

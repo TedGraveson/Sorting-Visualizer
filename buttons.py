@@ -10,6 +10,8 @@ from pygame.sprite import Sprite
 from pygame.rect import Rect
 from enum import Enum
 from threading import Lock
+from constants import SIZE_SMALL, SIZE_MEDIUM, SIZE_LARGE
+
 
 def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
     """ Returns surface with text written on """
@@ -21,7 +23,7 @@ def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
 class Button(Sprite):
     """ An user interface element that can be added to a surface """
 
-    def __init__(self, center_position, text, font_size, bg_rgb, text_rgb, action=None):
+    def __init__(self, center_position, text, font_size, bg_rgb, text_rgb, action=None, selected=None):
         """
         Args:
             center_position - tuple (x, y)
@@ -32,6 +34,12 @@ class Button(Sprite):
             action - the gamestate change associated with this button
         """
         self.mouse_over = False
+        self.center_position = center_position
+        self.text = text
+        self.font_size = font_size
+        self.bg_rgb = bg_rgb
+        self.text_rgb = text_rgb
+        self.action = action
 
         default_image = create_surface_with_text(
             text=text, font_size=font_size, text_rgb=text_rgb, bg_rgb=bg_rgb
@@ -79,9 +87,11 @@ class Button(Sprite):
         """ Draws element onto a surface """
         surface.blit(self.image, self.rect)
         
-    def change_color(self):
-        print("yo")
-        print(self.mouse_over)
+    def change_color(self, color):
+        self.images[0] = create_surface_with_text(text=self.text, font_size=self.font_size, text_rgb=color, bg_rgb=self.bg_rgb)
+        self.images[1] = create_surface_with_text(text=self.text, font_size=self.font_size * 1.2, text_rgb=color, bg_rgb=self.bg_rgb)
+        self.text_rgb = color
+
             
 
 def title_buttons():
@@ -123,7 +133,7 @@ def title_buttons():
         bg_rgb=BLUE,
         text_rgb=WHITE,
         text="Quit",
-        action=GameState.QUIT,
+        action=pygame.QUIT,
     )
 
     return [bubble_btn, insertion_btn, merge_btn, compare_btn, quit_btn]
@@ -167,7 +177,7 @@ def sorting_controls():
         bg_rgb=BLUE,
         text_rgb=WHITE,
         text="Medium",
-        action= set_med,
+        action=set_med,
     )
     fast = Button(
         center_position=(600, 50),
@@ -180,15 +190,18 @@ def sorting_controls():
     
     return [return_btn, randomize, sort, slow, medium, fast]
 
+
 def set_slow(self):
-    print(self.mouse_over)
     constants.SPEED = SLOW
+    constants.SIZE = SIZE_SMALL
     return GameState.SPEED
 
 def set_med(self):
     constants.SPEED = MEDIUM
+    constants.SIZE = SIZE_MEDIUM
     return GameState.SPEED
 
 def set_fast(self):
     constants.SPEED = FAST
+    constants.SIZE = SIZE_LARGE
     return GameState.SPEED
