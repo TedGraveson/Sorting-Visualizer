@@ -1,17 +1,9 @@
 
-import constants
-from constants import MEDIUM, SLOW, FAST,  GameState, BLUE, WHITE
-from pygame.sprite import RenderUpdates
-
-from types import FunctionType
+import resources.config as config
 import pygame
 import pygame.freetype
 from pygame.sprite import Sprite
-from pygame.rect import Rect
-from enum import Enum
-from threading import Lock
-from constants import SIZE_SMALL, SIZE_MEDIUM, SIZE_LARGE
-
+from resources.gamestate import GameState
 
 def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
     """ Returns surface with text written on """
@@ -98,42 +90,42 @@ def title_buttons():
     bubble_btn = Button(
         center_position=(400, 100),
         font_size=30,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Bubble Sort",
         action=GameState.BUBBLE,
     )
     insertion_btn = Button(
         center_position=(400, 200),
         font_size=30,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Insertion Sort",
         action=GameState.INSERTION,
     ),
     merge_btn = Button(
         center_position=(400, 300),
         font_size=30,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Merge Sort",
         action=GameState.MERGE,
     )
     compare_btn = Button(
         center_position=(400, 400),
         font_size=30,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Compare Sorts",
         action=GameState.COMPARE,
     )
     quit_btn = Button(
         center_position=(400, 500),
         font_size=30,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Quit",
-        action=pygame.QUIT,
+        action=GameState.QUIT,
     )
 
     return [bubble_btn, insertion_btn, merge_btn, compare_btn, quit_btn]
@@ -142,48 +134,48 @@ def sorting_controls():
     return_btn = Button(
         center_position=(200, 20),
         font_size=20,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Main menu",
         action=GameState.TITLE,
     )
     randomize = Button(
         center_position=(400, 20),
         font_size=20,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Randomize",
         action= GameState.RANDOMIZE,
     )
     sort = Button(
         center_position=(600, 20),
         font_size=20,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Sort",
         action= GameState.SORT,
     )
     slow = Button(
         center_position=(200, 50),
         font_size=20,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Slow",
         action= set_slow,
     )
     medium = Button(
         center_position=(400, 50),
         font_size=20,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Medium",
         action=set_med,
     )
     fast = Button(
         center_position=(600, 50),
         font_size=20,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
         text="Fast",
         action= set_fast,
     )
@@ -192,16 +184,16 @@ def sorting_controls():
 
 
 def set_slow(self):
-    constants.SPEED = SLOW
-    constants.SIZE = SIZE_SMALL
+    config.SPEED = config.SLOW
+    config.SIZE = config.SIZE_SMALL
     return GameState.SPEED
 
 def set_med(self):
-    constants.SPEED = MEDIUM
-    constants.SIZE = SIZE_MEDIUM
+    config.SPEED = config.MEDIUM
+    config.SIZE = config.SIZE_MEDIUM
     return GameState.SPEED
 
 def set_fast(self):
-    constants.SPEED = FAST
-    constants.SIZE = SIZE_LARGE
+    config.SPEED = config.FAST
+    config.SIZE = config.SIZE_LARGE
     return GameState.SPEED

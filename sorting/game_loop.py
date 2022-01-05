@@ -1,31 +1,17 @@
+
 import pygame
-from pygame.constants import USEREVENT
-import pygame.freetype
-from pygame.sprite import Sprite
-from pygame.rect import Rect
-from enum import Enum
-from pygame.sprite import RenderUpdates
-from bar_chart import BarChart, Bar, random_bar_chart
+from resources.gamestate import GameState
+import resources.config as config
 from threading import Thread
-import time
 from numpy import random
 
-import constants
-from constants import FAST, GameState, BLUE, WHITE, SORTING
-from buttons import sorting_controls, title_buttons
+from sorting.bubble import bubble_sort_vis
+from sorting.insertion import insertion_sort_vis
+from sorting.merge import merge_sort_vis, ms
 
-from sorting_algorithms import bubble_sort_vis, insertion_sort_vis, merge_sort_vis, ms
-
-def check_click():
-    """Checks if the user has performed a mouse click.
-
-    Returns:
-        Boolean value that is true if click occured, false otherwise.
-    """
-    for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                return True
-    return False
+from pygame.sprite import RenderUpdates
+from objects.buttons import *
+from objects.bar_chart import *
 
 def game_loop(screen, elements, sorting_algo=[], graphs=[], *args):
     """Draws all visual updates to the screen.
@@ -51,33 +37,33 @@ def game_loop(screen, elements, sorting_algo=[], graphs=[], *args):
             ui_action = element.update(pygame.mouse.get_pos(), mouse_click)
             if ui_action is not None:
                 if ui_action == GameState.SORT:
-                    if not constants.SORTING:
-                        constants.SORTING = True
+                    if not config.SORTING:
+                        config.SORTING = True
                         for x in range(len(graphs)):
                             threads[x] = (Thread(target = sorting_algo[x], args = (graphs[x], )))
                             threads[x].start()
     
                 elif ui_action == GameState.RANDOMIZE:
-                    if constants.SORTING:
-                        constants.SORTING = False
+                    if config.SORTING:
+                        config.SORTING = False
                         for thread in threads:
                             thread.join()
                 
                     new_graphs = [0] * len(graphs)
-                    values = random.randint(low=1, high=99, size=constants.SIZE)
+                    values = random.randint(low=1, high=99, size=config.SIZE)
                     for x in range(len(graphs)):
                         new_graphs[x] = BarChart(values, (graphs[x].width, graphs[x].height), graphs[x].origin)
                     graphs = new_graphs
                     
                 elif ui_action == GameState.SPEED:
                     for button in elements:
-                        if button.text_rgb is not constants.WHITE:
-                            button.change_color(constants.WHITE)
-                        element.change_color(constants.RED)
+                        if button.text_rgb is not config.WHITE:
+                            button.change_color(config.WHITE)
+                        element.change_color(config.RED)
                 
                 elif ui_action == GameState.TITLE:
-                    if constants.SORTING:
-                        constants.SORTING = False
+                    if config.SORTING:
+                        config.SORTING = False
                         for thread in threads:
                                 thread.join()
                     return ui_action
@@ -86,14 +72,24 @@ def game_loop(screen, elements, sorting_algo=[], graphs=[], *args):
                     return ui_action
                 
 
-        screen.fill(BLUE)
+        screen.fill(config.BLUE)
         for graph in graphs:
             graph.draw(screen)
             
         elements.draw(screen)
         pygame.display.flip()
         
-        
+def check_click():
+    """Checks if the user has performed a mouse click.
+
+    Returns:
+        Boolean value that is true if click occured, false otherwise.
+    """
+    for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                return True
+    return False
+       
 def bubble_sort(screen):
     buttons = RenderUpdates(sorting_controls())
     graphs = [random_bar_chart()]
@@ -128,36 +124,4 @@ def compare_sorts(screen):
 
 def title_screen(screen):
     buttons = RenderUpdates(title_buttons())
-    return game_loop(screen, buttons)    
-
-if __name__ == "__main__":
-    pygame.init()
-    screen = pygame.display.set_mode((800, 600))
-    game_state = GameState.TITLE
-    
-    # main loop
-    while True:
-        # Title Screen
-        if game_state == GameState.TITLE:
-            game_state = title_screen(screen)
-            
-        # Bubble Sort
-        elif game_state == GameState.BUBBLE:
-            game_state = bubble_sort(screen)
-            
-        # Insertion Sort
-        elif game_state == GameState.INSERTION:
-            game_state = insertion_sort(screen)
-            
-        # Merge Sort
-        elif game_state == GameState.MERGE:
-            game_state = merge_sort(screen)
-            
-        # Compare Sorts
-        elif game_state == GameState.COMPARE:
-            game_state = compare_sorts(screen)
-            
-        # Quit Application
-        elif game_state == pygame.QUIT or pygame.event.get(pygame.QUIT):
-            pygame.quit()
-            exit()
+    return game_loop(screen, buttons)

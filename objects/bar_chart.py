@@ -1,10 +1,7 @@
-from pygame import color, sprite
-from pygame.sprite import Sprite
 import pygame
 from threading import Lock
 from numpy import random
-import constants
-from constants import SIZE_SMALL, SIZE_MEDIUM, SIZE_LARGE
+import resources.config as config
 
 
 class Bar(pygame.sprite.Sprite):
@@ -113,4 +110,4 @@ class BarChart(pygame.sprite.AbstractGroup):
             bar.draw(surface)
 
 def random_bar_chart(low=1, high=99, size=(800, 500), origin=(0, 600)):
-    return BarChart(random.randint(low=1, high=99, size=(constants.SIZE)), size=size, origin=origin)
+    return BarChart(random.randint(low=1, high=99, size=(config.SIZE)), size=size, origin=origin)
