@@ -1,4 +1,3 @@
-
 import resources.config as config
 import pygame
 import pygame.freetype
@@ -56,7 +55,7 @@ class Button(Sprite):
     @property
     def image(self):
         return self.images[1] if self.mouse_over else self.images[0]
-
+    
     @property
     def rect(self):
         return self.rects[1] if self.mouse_over else self.rects[0]
@@ -130,7 +129,7 @@ def title_buttons():
 
     return [bubble_btn, insertion_btn, merge_btn, compare_btn, quit_btn]
     
-def sorting_controls():
+def sorting_controls(sort_title="Sort"):
     return_btn = Button(
         center_position=(200, 20),
         font_size=20,
@@ -152,7 +151,7 @@ def sorting_controls():
         font_size=20,
         bg_rgb=config.BLUE,
         text_rgb=config.WHITE,
-        text="Sort",
+        text=sort_title,
         action= GameState.SORT,
     )
     slow = Button(
