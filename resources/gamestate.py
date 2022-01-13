@@ -1,3 +1,4 @@
+# Used for event handling when buttons are pressed
 from enum import Enum
 class GameState(Enum):
     QUIT = -1
@@ -12,3 +13,5 @@ class GameState(Enum):
     MEDIUM = 6
     FAST = 6
     COMPARE = 7
+    QUICK = 20
+    HEAP = 21

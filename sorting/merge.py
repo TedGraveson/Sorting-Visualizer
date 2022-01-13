@@ -167,3 +167,6 @@ def mergeSort(bar_chart, s, e):
 
 def ms(bar_chart):
     mergeSort(bar_chart, 0, len(bar_chart.bars)-1)
+    
+    
+    

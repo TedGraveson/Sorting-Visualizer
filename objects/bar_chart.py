@@ -159,8 +159,11 @@ class BarChart(pygame.sprite.AbstractGroup):
         Args:
             surface: Pygame screen instance
         """
+        x, y = self.origin
+        pygame.draw.line(surface, config.WHITE, (self.origin), (x+self.width, y))
         for bar in self.bars:
             bar.draw(surface)
+            
 
 def random_bar_chart(low=1, high=99, size=(800, 500), origin=(0, 600)):
     """Generates a random bar chart.

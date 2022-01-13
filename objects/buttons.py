@@ -5,7 +5,12 @@ from pygame.sprite import Sprite
 from resources.gamestate import GameState
 
 def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
-    """ Returns surface with text written on """
+    """ Creates the text label for buttons.
+    
+    Args:
+        text
+    
+    """
     font = pygame.freetype.SysFont("Courier", font_size, bold=True)
     surface, _ = font.render(text=text, fgcolor=text_rgb, bgcolor=bg_rgb)
     return surface.convert_alpha()
@@ -94,8 +99,24 @@ def title_buttons():
         text="Bubble Sort",
         action=GameState.BUBBLE,
     )
+    quick_btn = Button(
+        center_position=(400, 250),
+        font_size=30,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
+        text="Quick Sort",
+        action=GameState.QUICK,
+    )
+    heap_btn = Button(
+        center_position=(400, 300),
+        font_size=30,
+        bg_rgb=config.BLUE,
+        text_rgb=config.WHITE,
+        text="Heap Sort",
+        action=GameState.HEAP,
+    )
     insertion_btn = Button(
-        center_position=(400, 200),
+        center_position=(400, 148), # weird spacing bug
         font_size=30,
         bg_rgb=config.BLUE,
         text_rgb=config.WHITE,
@@ -103,7 +124,7 @@ def title_buttons():
         action=GameState.INSERTION,
     ),
     merge_btn = Button(
-        center_position=(400, 300),
+        center_position=(400, 200),
         font_size=30,
         bg_rgb=config.BLUE,
         text_rgb=config.WHITE,
@@ -127,7 +148,7 @@ def title_buttons():
         action=GameState.QUIT,
     )
 
-    return [bubble_btn, insertion_btn, merge_btn, compare_btn, quit_btn]
+    return [bubble_btn, quick_btn, insertion_btn, merge_btn, compare_btn, heap_btn, quit_btn]
     
 def sorting_controls(sort_title="Sort"):
     return_btn = Button(
@@ -166,7 +187,7 @@ def sorting_controls(sort_title="Sort"):
         center_position=(400, 50),
         font_size=20,
         bg_rgb=config.BLUE,
-        text_rgb=config.WHITE,
+        text_rgb=config.YELLOW,
         text="Medium",
         action=set_med,
     )

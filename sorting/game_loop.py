@@ -5,8 +5,10 @@ from threading import Thread
 from numpy import random
 
 from sorting.bubble import bubble_sort_vis
+from sorting.heap import heap_sort_vis
 from sorting.insertion import insertion_sort_vis
 from sorting.merge import merge_sort_vis, ms
+from sorting.quick import quick_sort_vis
 
 from pygame.sprite import RenderUpdates
 from objects.buttons import *
@@ -24,6 +26,10 @@ def game_loop(screen, elements, sorting_algo=[], graphs=[]):
     Returns:
         GameState enum corresponing to a button being clicked
     """
+    
+    # Default to medium size and speed
+    config.SPEED = config.MEDIUM
+    config.SIZE = config.SIZE_MEDIUM
     
     # Array to hold threads
     threads = [ 0 ] * len(graphs)
@@ -56,20 +62,17 @@ def game_loop(screen, elements, sorting_algo=[], graphs=[]):
                         config.SORTING = False
                         for thread in threads:
                             thread.join()
-                
-                    # Same BarGraph values are used if multiple are created
-                    new_graphs = [0] * len(graphs)
-                    values = random.randint(low=1, high=99, size=config.SIZE)
-                    for x in range(len(graphs)):
-                        new_graphs[x] = BarChart(values, (graphs[x].width, graphs[x].height), graphs[x].origin)
-                    graphs = new_graphs
+                    
+                    graphs = randomize_graphs(graphs)
                     
                 # Changing sorting speed and button color
                 elif ui_action == GameState.SPEED:
                     for button in elements:
                         if button.text_rgb is not config.WHITE:
                             button.change_color(config.WHITE)
-                        element.change_color(config.RED)
+                        element.change_color(config.YELLOW)
+                    if not config.SORTING:
+                        graphs = randomize_graphs(graphs)
                 
                 # Returning to main menu
                 elif ui_action == GameState.TITLE:
@@ -89,6 +92,13 @@ def game_loop(screen, elements, sorting_algo=[], graphs=[]):
         elements.draw(screen)
         pygame.display.flip()
         
+def randomize_graphs(graphs):
+    new_graphs = [0] * len(graphs)
+    values = random.randint(low=1, high=99, size=config.SIZE)
+    for x in range(len(graphs)):
+        new_graphs[x] = BarChart(values, (graphs[x].width, graphs[x].height), graphs[x].origin)
+    
+    return new_graphs
         
 def check_click():
     """Checks if the user has performed a mouse click.
@@ -110,39 +120,14 @@ def bubble_sort(screen):
     Returns:
         GameState enum once user exits to main menu
     """
-    buttons = RenderUpdates(sorting_controls(sort_title="Bubble Sort"))
+    buttons = RenderUpdates(sorting_controls())
     graphs = [random_bar_chart()]
-    sorting_algos = [bubble_sort_vis]
+    sorting_algos = [quick_sort_vis]
+    #sorting_algos = [bubble_sort_vis]
     return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
     
     
-def insertion_sort(screen):
-    """Initialize insertion sort elements.
 
-    Args:
-        screen: Pygame screen instance
-
-    Returns:
-        GameState enum once user exits to main menu
-    """
-    buttons = RenderUpdates(sorting_controls())
-    graphs = [random_bar_chart()]
-    sorting_algos = [insertion_sort_vis]
-    return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
-
-def merge_sort(screen):
-    """Initialize merge sort elements.
-
-    Args:
-        screen: Pygame screen instance
-
-    Returns:
-        GameState enum once user exits to main menu
-    """
-    buttons = RenderUpdates(sorting_controls())
-    graphs = [random_bar_chart()]
-    sorting_algos = [ms]
-    return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
 
 def compare_sorts(screen):
     """Initialize elements for merge, bubble, and insertion sort.
@@ -153,17 +138,19 @@ def compare_sorts(screen):
     Returns:
         GameState enum once user exits to main menu
     """
+    
     buttons = RenderUpdates(sorting_controls())
     
-    b1 = random_bar_chart(size=(800, 100), origin=(0, 600))
-    b2 = random_bar_chart(size=(800, 100), origin=(0, 400))
-    b3 = random_bar_chart(size=(800, 100), origin=(0, 200))
+    b1 = random_bar_chart(size=(800, 100), origin=(0, 200))
+    b2 = random_bar_chart(size=(800, 100), origin=(0, 300))
+    b3 = random_bar_chart(size=(800, 100), origin=(0, 400))
+    b4 = random_bar_chart(size=(800, 100), origin=(0, 500))
+    b5 = random_bar_chart(size=(800, 100), origin=(0, 600))
     
-    graphs = [b1, b2, b3]
+    graphs = [b1, b2, b3, b4, b5]
         
-    sorting_algos = [bubble_sort_vis, insertion_sort_vis, ms]
+    sorting_algos = [bubble_sort_vis, insertion_sort_vis, ms, heap_sort_vis, quick_sort_vis]
     return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
-    
 
 def title_screen(screen):
     """Initialize elements for title screen.
