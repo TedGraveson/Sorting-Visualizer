@@ -1,6 +1,12 @@
 import resources.config as config
 import time
-def insertion_sort_vis(bar_chart):  
+
+def insertion_sort_vis(bar_chart):
+    """Insertion sort visualiztion for a bar chart.
+
+    Args:
+        bar_chart: Bar chart to be sorted
+    """
     bar_chart.mutex.acquire()
     
     bars = bar_chart.bars

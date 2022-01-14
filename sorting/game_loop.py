@@ -7,7 +7,7 @@ from numpy import random
 from sorting.bubble import bubble_sort_vis
 from sorting.heap import heap_sort_vis
 from sorting.insertion import insertion_sort_vis
-from sorting.merge import merge_sort_vis, ms
+from sorting.merge import merge_sort_vis
 from sorting.quick import quick_sort_vis
 
 from pygame.sprite import RenderUpdates
@@ -93,6 +93,14 @@ def game_loop(screen, elements, sorting_algo=[], graphs=[]):
         pygame.display.flip()
         
 def randomize_graphs(graphs):
+    """Randomize all graphs on screen.
+
+    Args:
+        graphs: Array of bar graph objects
+
+    Returns:
+        Array of new bar graph objects
+    """
     new_graphs = [0] * len(graphs)
     values = random.randint(low=1, high=99, size=config.SIZE)
     for x in range(len(graphs)):
@@ -111,23 +119,6 @@ def check_click():
                 return True
     return False
        
-def bubble_sort(screen):
-    """Initialize bubble sort elements.
-
-    Args:
-        screen: Pygame screen instance
-
-    Returns:
-        GameState enum once user exits to main menu
-    """
-    buttons = RenderUpdates(sorting_controls())
-    graphs = [random_bar_chart()]
-    sorting_algos = [quick_sort_vis]
-    #sorting_algos = [bubble_sort_vis]
-    return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
-    
-    
-
 
 def compare_sorts(screen):
     """Initialize elements for merge, bubble, and insertion sort.
@@ -149,7 +140,7 @@ def compare_sorts(screen):
     
     graphs = [b1, b2, b3, b4, b5]
         
-    sorting_algos = [bubble_sort_vis, insertion_sort_vis, ms, heap_sort_vis, quick_sort_vis]
+    sorting_algos = [bubble_sort_vis, insertion_sort_vis, merge_sort_vis, quick_sort_vis, heap_sort_vis,]
     return game_loop(screen, buttons, graphs=graphs, sorting_algo=sorting_algos)
 
 def title_screen(screen):

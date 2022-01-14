@@ -1,9 +1,15 @@
 import resources.config as config
 import time
 
-def bubble_sort_vis(bar_chart):  
+def bubble_sort_vis(bar_chart):
+    """Merge sort visualization for a bar chart.
+
+    Args:
+        bar_chart: Bar chart to be sorted
+    """
     # Traverse through all array elements
     bar_chart.mutex.acquire()
+    
     for i in range(len(bar_chart.bars)):
     # range(n) also work but outer loop will repeat one time more than needed.
         # current.change_color(constants.RED)

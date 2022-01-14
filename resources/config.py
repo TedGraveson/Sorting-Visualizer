@@ -2,16 +2,17 @@
 
 # Time to sleep between sorting steps
 SLOW = 1
-MEDIUM = 0.01
+MEDIUM = 0.05
 FAST = 0.001
 
 # Number of elements in array
 SIZE_SMALL = 10
-SIZE_MEDIUM = 100
+SIZE_MEDIUM = 50
 SIZE_LARGE = 200
 
 # Colors 
 BLUE = (106, 159, 181)
+PURPLE = (140, 122, 230)
 WHITE = (255, 255, 255)
 RED = (192, 57, 43)
 GREEN = (76, 209, 55)
